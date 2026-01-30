@@ -1,0 +1,63 @@
+app:
+  title: Morning Brief Hub
+  timezone: Asia/Shanghai
+  base_url: http://localhost:8000
+
+crawl:
+  interval_minutes: 30
+  max_items_per_source: 20
+  user_agent: "MorningBriefBot/1.0"
+  proxy: ""
+
+sources:
+  - id: perplexity_discover
+    name: Perplexity Discover
+    type: rss
+    url: https://www.perplexity.ai/discover/rss
+  - id: bloomberg_asia
+    name: Bloomberg Asia
+    type: rss
+    url: https://www.bloomberg.com/feeds/bbiz/asia.rss
+  - id: reuters_markets
+    name: Reuters Markets
+    type: rss
+    url: https://feeds.reuters.com/reuters/businessNews
+  # 继续添加更多来源即可扩展（支持 rss / html）
+
+summary:
+  provider: openai
+  model: gpt-4o-mini
+  max_tokens: 512
+  highlight_count: 5
+
+push:
+  enabled: false
+  schedule_cron: "0 7 * * *"
+  providers:
+    - type: feishu
+      name: feishu-bot
+      url: ""
+    - type: wecom
+      name: wecom-bot
+      url: ""
+
+web:
+  allow_html: true
+  theme: sunlit
+
+llm:
+  openai:
+    base_url: https://api.openai.com/v1
+    api_key: ""
+  kimi:
+    base_url: https://api.moonshot.cn/v1
+    api_key: ""
+  glm:
+    base_url: https://open.bigmodel.cn/api/paas/v4
+    api_key: ""
+
+speech:
+  provider: local
+  voice: calm
+  format: mp3
+  output_dir: data/tts
