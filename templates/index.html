@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ config.app.title }}</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div>
+        <h1>{{ config.app.title }}</h1>
+        <p>清新明媚的晨间财经要闻管家</p>
+      </div>
+      <div class="hero-actions">
+        <form action="/api/crawl" method="post">
+          <button type="submit">立即抓取</button>
+        </form>
+        <form action="/api/summary" method="post">
+          <button type="submit" class="secondary">生成摘要</button>
+        </form>
+        <form action="/api/push" method="post">
+          <button type="submit" class="secondary">推送到手机</button>
+        </form>
+        <form action="/api/tts" method="post">
+          <button type="submit" class="secondary">生成语音</button>
+        </form>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel">
+        <h2>今日简报</h2>
+        {% if brief %}
+        <div class="brief">
+          <pre>{{ brief["highlights"] }}</pre>
+          <p>{{ brief["summary"] }}</p>
+          {% if brief["tts_path"] %}
+          <audio controls src="/data/{{ brief["tts_path"].split('data/')[1] }}"></audio>
+          {% endif %}
+        </div>
+        {% else %}
+        <p class="muted">尚未生成简报，请先抓取并生成摘要。</p>
+        {% endif %}
+      </section>
+
+      <section class="panel">
+        <h2>最新新闻</h2>
+        <div class="article-list">
+          {% for article in articles %}
+          <article>
+            <h3><a href="{{ article["url"] }}" target="_blank">{{ article["title"] }}</a></h3>
+            <p class="meta">{{ article["source_id"] }} · {{ article["published_at"] }}</p>
+            {% if article["summary"] %}
+            <p class="summary">{{ article["summary"] }}</p>
+            {% endif %}
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
